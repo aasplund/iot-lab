@@ -1,0 +1,8 @@
+version: "2.2"
+
+services:
+  thing:
+    build: .
+    restart: always
+    ports:
+      - "8888:8080"
