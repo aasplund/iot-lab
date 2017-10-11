@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name:  lightbulb-spa-service
+  labels:
+    app: lightbulb-spa
+spec:
+    selector:
+      app: lightbulb-spa
+    ports:
+    - port: 80
+      targetPort: spa-port
+      protocol: TCP
+    type: LoadBalancer

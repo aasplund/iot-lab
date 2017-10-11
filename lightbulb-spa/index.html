@@ -24,10 +24,10 @@
 			}
 		};
 
-		xhttp.open("GET", "http://localhost:8070/status", true);
+		xhttp.open("GET", "http://lightbulb-api.kubernetes.iot-lab.services/status", true);
 		xhttp.send();
 
-		var source = new EventSource("http://localhost:8070/");
+		var source = new EventSource("http://lightbulb-api.kubernetes.iot-lab.services/");
 		source.onmessage = function (event) {
 			var json = JSON.parse(event.data);
 			console.log(json);

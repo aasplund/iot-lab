@@ -11,23 +11,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 
+import java.util.Map;
+
 public class LightBulbServer {
 	private static Logger logger = LoggerFactory.getLogger(LightBulbServer.class);
 
 	public static void main(String[] args) throws ParseException {
+		final Map<String, String> env = System.getenv();
 
 		final Options options = new Options();
 		final CommandLineParser parser = new DefaultParser();
 
-		options.addRequiredOption("e", "endpoint", true, "Client Endpoint");
-		options.addRequiredOption("i", "access-key-id", true, "AWS Access Key Id");
-		options.addRequiredOption("k", "secret-access-key", true, "AWS Secret Access Key");
+		options.addOption("e", "endpoint", true, "Client Endpoint");
+		options.addOption("i", "access-key-id", true, "AWS Access Key Id");
+		options.addOption("k", "secret-access-key", true, "AWS Secret Access Key");
 
 		final CommandLine commandLine = parser.parse(options, args);
-		final String clientEndpoint = commandLine.getOptionValue("e");
-		final String awsAccessKeyId = commandLine.getOptionValue("i");
-		final String awsSecretAccessKey = commandLine.getOptionValue("k");
-		final String clientId = "client1";
+		final String clientEndpoint = commandLine.getOptionValue("e", env.getOrDefault("ENDPOINT", null));
+		final String awsAccessKeyId = commandLine.getOptionValue("i", env.getOrDefault("ID", null));
+		final String awsSecretAccessKey = commandLine.getOptionValue("k", env.getOrDefault("KEY", null));
+
+		final String clientId = "lightbulbServer";
+		System.out.println(String.format("Connection to: %s, %s, %s", clientEndpoint, awsAccessKeyId, awsSecretAccessKey));
 
 		final AWSIotMqttClient awsIotMqttClient = new AWSIotMqttClient(clientEndpoint, clientId, awsAccessKeyId, awsSecretAccessKey);
 		final AWSIotDevice device = new AWSIotDevice("MyLightBulb");
@@ -47,6 +52,7 @@ public class LightBulbServer {
 				.doOnNext(logger::debug);
 
 		HttpServer.newServer(8070).start((req, resp) -> {
+			logger.debug("Handling incoming request: ", req.getUri());
 			switch (req.getUri()) {
 				case "/":
 					return resp

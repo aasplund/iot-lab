@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>se.callista</groupId>
-	<artifactId>light-bulb-rest-api</artifactId>
+	<artifactId>lightbulb-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>light-bulb-rest-api</name>
-	<description>Light bulb rest api</description>
+	<name>lightbulb-api</name>
+	<description>Rest API for a light bulb</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -83,10 +83,10 @@
 
 	<build>
 		<plugins>
-			<!--<plugin>-->
-				<!--<groupId>com.spotify</groupId>-->
-				<!--<artifactId>dockerfile-maven-plugin</artifactId>-->
-				<!--<version>${dockerfile-maven-plugin.version}</version>-->
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>${dockerfile-maven-plugin.version}</version>
 				<!--<executions>-->
 					<!--<execution>-->
 						<!--<id>default</id>-->
@@ -96,15 +96,49 @@
 						<!--</goals>-->
 					<!--</execution>-->
 				<!--</executions>-->
-				<!--<configuration>-->
-					<!--<repository>${docker.image.prefix}/${project.artifactId}</repository>-->
+				<configuration>
+					<repository>${docker.image.prefix}/${project.artifactId}</repository>
 					<!--<tag>${project.version}</tag>-->
 					<!--<buildArgs>-->
 						<!--<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>-->
 					<!--</buildArgs>-->
-				<!--</configuration>-->
-			<!--</plugin>-->
+				</configuration>
+			</plugin>
 
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>se.gunnebo.iot.LightBulbServer</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>se.gunnebo.iot.LightBulbServer</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

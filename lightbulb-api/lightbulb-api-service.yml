@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name:  lightbulb-api-service
+  labels:
+    app: lightbulb-api
+spec:
+    selector:
+      app: lightbulb-api
+    ports:
+    - port: 80
+      targetPort: api-port
+      protocol: TCP
+    type: LoadBalancer
