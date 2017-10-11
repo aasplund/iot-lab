@@ -2,21 +2,10 @@ version: "3.3"
 
 services:
 
-  light-bulb-spa:
-    build: ./light-bulb-console-spa
-    restart: always
-    ports:
-      - "80:80"
-    links:
-      - light-bulb-api
+  lightbulb-spa:
+    build: ./lightbulb-spa
+    image: lightbulb-spa
 
-  light-bulb-api:
-    build: ./light-bulb-rest-api
-    restart: always
-    hostname: 0.0.0.0
-    environment:
-      - ENTRYPOINT=${ENTRYPOINT}
-      - ID=${ID}
-      - KEY=${KEY}
-    ports:
-      - "8080:8070"
+  lightbulb-api:
+    build: ./lightbulb-api
+    image: lightbulb-api
